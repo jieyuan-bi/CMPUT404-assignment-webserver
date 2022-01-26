@@ -31,8 +31,45 @@ class MyWebServer(socketserver.BaseRequestHandler):
     
     def handle(self):
         self.data = self.request.recv(1024).strip()
-        print ("Got a request of: %s\n" % self.data)
-        self.request.sendall(bytearray("OK",'utf-8'))
+        print ("Got a request of: %s\n" % self.data.decode("utf-8"))
+        #TODO
+        message = "HTTP/1.1 "
+        path = self.get_path(self.data.decode("utf-8"))
+        body = self.get_body(path)
+        if self.check_get_method(self.data.decode("utf-8")):
+            #Handle the GET request
+            message += "200 OK\n"
+        else:
+            #Other requests -- 405 Method Not Allowed
+            message += "405 Method Not Allowed\n"
+
+        message = message + 'Content-Length: ' + str(len(body))
+        #Send back response of whatever
+        self.request.sendall(bytearray(message+"\r\n\r\n"+body+'\n','utf-8'))
+
+    #Check if the request method is GET
+    def check_get_method(self, data):
+        if data[:3]=="GET":
+            return True
+        else:
+            return False
+
+    #Get the path of the request
+    def get_path(self, request):
+        return "/"
+        #TODO handle 301 error
+        #TODO handle 404 error
+
+    #Get the body of the response
+    def get_body(self, path):
+        try:
+            with open('www/index.html','r') as file:
+                text = ''.join(file.readlines())
+                print('text\n',text)
+                return text
+        except Exception as e:
+            print('error\n',e)
+            return e
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
