@@ -42,7 +42,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         content_type = "text/plain"
         #Other requests -- 405 Method Not Allowed
         if not self.check_get_method(self.data.decode("utf-8")):
-            message += "405 Method Not Allowed\n"
+            message += "405 Method Not Allowed\r\n"
         else:
             if path:
                 # validate the path
@@ -51,20 +51,20 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 if status_code == 200:
                     body = self.get_body(path)
                     content_type = self.check_file(path)
-                    message += "200 OK\n"
+                    message += "200 OK\r\n"
                 elif status_code == 301:
-                    message = message + "301 Moved Permanently\nLocation: http://127.0.0.1:8080" + path +"/\n"
+                    message = message + "301 Moved Permanently\r\nLocation: http://127.0.0.1:8080" + path +"/\r\n"
                 elif status_code == 404:
-                    message += "404 Not Found\n"
+                    message += "404 Not Found\r\n"
 
             else:
                 # no path exist
-                message += "404 Not Found\n"
+                message += "404 Not Found\r\n"
         
 
-        message = message + 'Content-Type: ' + content_type + '\nContent-Length: ' + str(len(body)+1)
+        message = message + 'Content-Type: ' + content_type    # + '\r\nContent-Length: ' + str(len(body)+1)
         #Send back response of whatever
-        self.request.sendall(bytearray(message+"\r\n\r\n"+body+'\n','utf-8'))
+        self.request.sendall(bytearray(message+"\r\n\r\n"+body+'\r\n','utf-8'))
 
     #Check if the request method is GET
     def check_get_method(self, data):
