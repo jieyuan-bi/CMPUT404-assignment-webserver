@@ -37,7 +37,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
         #TODO
         message = "HTTP/1.1 "
         path = self.get_path(self.data.decode("utf-8"))
-        print("path is", path)
+        # print("path is", path)
         body = ""
         content_type = "text/plain"
         #Other requests -- 405 Method Not Allowed
@@ -47,7 +47,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
             if path:
                 # validate the path
                 status_code = self.check_path(path)
-                print("status code is: ",status_code)
+                # print("status code is: ",status_code)
                 if status_code == 200:
                     body = self.get_body(path)
                     content_type = self.check_file(path)
@@ -102,12 +102,12 @@ class MyWebServer(socketserver.BaseRequestHandler):
             if os.path.exists(path):
                 return 301
             else:
-                print("path not exist after adding /: ",path)
+                # print("path not exist after adding /: ",path)
                 return 404
         else:
             #404 error
             if not os.path.exists(path):
-                print("path not exist: ",path)
+                # print("path not exist: ",path)
                 return 404
         return 200
 
