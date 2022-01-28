@@ -62,7 +62,7 @@ class MyWebServer(socketserver.BaseRequestHandler):
                 message += "404 Not Found\r\n"
         
 
-        message = message + 'Content-Type: ' + content_type    # + '\r\nContent-Length: ' + str(len(body)+1)
+        message = message + 'Server: Jieyuan\r\n' + 'Content-Type: ' + content_type + '\r\nContent-Length: ' + str(len(bytes(body,'utf-8'))) +'\r\nConnection: close'
         #Send back response of whatever
         self.request.sendall(bytearray(message+"\r\n\r\n"+body+'\r\n','utf-8'))
 
